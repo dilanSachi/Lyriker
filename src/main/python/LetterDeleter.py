@@ -11,8 +11,8 @@ class LetterDeleter():
         for i in range(len(word)):
             newWord = self.deleteLetter(word, i)
             if(newWord not in self.edits):
-                if(distance == 1):
-                    self.edits.append(newWord)
+                #if(distance == 1):
+                self.edits.append(newWord)
                 self.delete(newWord, distance-1)
         return self.edits
 

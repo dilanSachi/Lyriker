@@ -84,11 +84,11 @@ class Words():
         for row in rows:
             originalWords.append(row[2])
             songs.append(row[1])
-        #print(songs)
-        #return originalWords,songs
-        return songs
+        #print(originalWords, songs)
+        return originalWords,songs
+        #return songs
 #w = Words()
 #w.formatLyrics(w.readJson())
 #w.saveToDB()
-#w.search("hen")
+#w.search("whe")
 #w.search("Jonny")
