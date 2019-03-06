@@ -48,7 +48,14 @@ class SQLite():
         cursor = self.db.cursor()
         cursor.execute(''' drop table words''')
 
-#sl = SQLite()
+    def test(self, ind):
+        cursor = self.db.cursor()
+        cursor.execute('''SELECT * from connections natural left join (select * from words where word_id=(?)) as A where word_id=wordIndex''',[ind])
+        all_rows = cursor.fetchall()
+        return all_rows
 
+sl = SQLite()
+for i in sl.test(121):
+    print(i)
 #sl.executeMany()
 #sl.readDB()

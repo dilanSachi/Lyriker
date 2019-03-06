@@ -18,13 +18,15 @@ class Words():
                 i = i + 1
             return lyrics
 
-    def getSongData(self):
+    def getSongData(self, song):
         with open('2.json') as json_file:
             songs = json.load(json_file)
             songData = []
-            for p in songs['Songs']:
-                songData.append([p['Title'],p['Artist']])
-            return songData
+            #for p in songs['Songs']:
+             #   songData.append([p['Title'],p['Artist']])
+            #return songData
+            return songs['Songs'][song]
+        json_file.close()
 
     def formatLyrics(self, lyrics):
         ld = LetterDeleter()
@@ -92,3 +94,4 @@ class Words():
 #w.saveToDB()
 #w.search("whe")
 #w.search("Jonny")
+#print(w.getSongData(2))

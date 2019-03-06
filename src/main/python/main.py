@@ -1,12 +1,12 @@
 from fbs_runtime.application_context import ApplicationContext
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
-from MySqlConnector import MySqlConnector
 from LetterDeleter import LetterDeleter
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 from PyQt5.QtCore import pyqtSlot
 import sys
 from Words import Words
+from SQLiteConnector import SQLite
 
 class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
 
@@ -25,6 +25,8 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
     def getResults(self):
         uInput = str(self.dlg.plainTextEdit.toPlainText()).lower().strip().split(" ")
         ld = LetterDeleter()
+
+        probableWords = []
 
         for uInputWord in uInput:
             ld.edits = []
@@ -60,8 +62,45 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
                         originalWordsFrequency.append(1)
 
 
-            print(originalWords)
-            print(originalWordsFrequency)
+            #print("ow",originalWords)
+            #print("owfo",originalWordsFrequency)
+
+            temp = []
+            for i in range(len(originalWords)):
+                ind = originalWordsFrequency.index(max(originalWordsFrequency))
+                temp.append(originalWords[ind])
+                originalWordsFrequency[ind] = 0
+                if(i==0):
+                    break
+            probableWords.append(temp)
+        #print("final",probableWords)
+        sqlt = SQLite()
+        probableSongs = []
+        probableSongsFrequency = []
+        tempI = []
+        print(probableWords)
+        i = 0
+        for temp in probableWords:
+            for ind in temp:
+                results = sqlt.test(ind)
+                #print(result)
+                for result in results:
+                    try:
+                        tempInd = probableSongs.index(result[1])
+                        if(i != tempI[tempInd]):
+                            probableSongsFrequency[tempInd] = probableSongsFrequency[tempInd] + 1
+                    except:
+                        probableSongs.append(result[1])
+                        probableSongsFrequency.append(1)
+                        tempI.append(i)
+            i = i + 1
+        print(probableSongs)
+        print(probableSongsFrequency)
+
+        for probableSong in probableSongs:
+            #print(probableSong)
+            songData = w.getSongData(probableSong-1)
+            self.dlg.listWidget.addItem("Song : " + songData['Title'])
         #print(tempSongs)
         #print(tempFrequency)
         #w = Words()
