@@ -294,3 +294,9 @@ class PorterStemmer:
         word = self.step5b(word)
         return word
 
+#p = PorterStemmer()
+##print(p.stem("beautiful"))
+#print(p.stem("learned"))
+#print(p.stem("beauty"))
+#print(p.stem("beauti"))
+#print(p.stem("beautiful"))

@@ -38,6 +38,9 @@ class NumberToWord():
                     else:
                         numWord = numWord + self.tens[int(num[0])] + " " + self.ones[int(num[1])] + " " + self.thousands + " "
                         newNum = num[2:]
+                else:
+                    numWord = numWord + self.ten[int(num[1])] + " " + self.thousands + " "
+                    newNum = num[2:]
             else:
                 newNum = num[1:]
 
@@ -72,7 +75,6 @@ class NumberToWord():
         else:
             if(len(numWord) == 0):
                 numWord = numWord + self.ones[int(num[0])] + " "
-        
         return numWord
 
 #a = NumberToWord()
@@ -81,4 +83,4 @@ class NumberToWord():
 #a.convert(39101)
 #a.convert(4011)
 #a.convert(41)
-#a.convert(1)
+#a.convert(12345)

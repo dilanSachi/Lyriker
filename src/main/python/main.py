@@ -9,6 +9,8 @@ from test import Ui_Lyriker
 from SpellCorrector import SpellCorrector
 from SQLiteConnector import SQLiteConnector
 import sqlite3
+from LyricsFormatter import LyricsFormatter
+from JSONManager import JSONManager
 
 class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
 
@@ -125,6 +127,15 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
 
 if __name__ == '__main__':
     appctxt = AppContext()  # 4. Instantiate the subclass
+
+    #lf = LyricsFormatter(appctxt)
+    #lf.formatLyrics()
+
+    jm  = JSONManager(appctxt)
+    jm.writeJSON()
+
+
+
     #exit_code = appctxt.run()  # 5. Invoke run()
     #sys.exit(exit_code)
 
