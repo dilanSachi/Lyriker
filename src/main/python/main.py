@@ -11,6 +11,7 @@ from SQLiteConnector import SQLiteConnector
 import sqlite3
 from LyricsFormatter import LyricsFormatter
 from JSONManager import JSONManager
+from LetterDeleteFormatter import LetterDeleteFormatter
 
 class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
 
@@ -126,15 +127,23 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
             self.ui.listWidget.addItem("Song : " + songData['Title'])
 
 if __name__ == '__main__':
+    print("d")
     appctxt = AppContext()  # 4. Instantiate the subclass
 
-    #lf = LyricsFormatter(appctxt)
-    #lf.formatLyrics()
+    print("a")
 
-    jm  = JSONManager(appctxt)
-    jm.writeJSON()
+    lf = LyricsFormatter(appctxt)
+    lf.formatLyrics()
 
+    print("b")
 
+    #jm  = JSONManager(appctxt)
+    #jm.writeJSON()
+
+    ldf = LetterDeleteFormatter(appctxt)
+    ldf.format()
+
+    print("c")
 
     #exit_code = appctxt.run()  # 5. Invoke run()
     #sys.exit(exit_code)

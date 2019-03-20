@@ -10,7 +10,7 @@ class LyricsFormatter():
         self.wordDict = {}
 
     def readJson(self):
-        file = self.aContext.get_resource('2.json')
+        file = self.aContext.get_resource('3.json')
         with open(file) as json_file:
             songs = json.load(json_file)
             i = 0
@@ -39,6 +39,3 @@ class LyricsFormatter():
         wordFile = self.aContext.get_resource('OriginalWords.json')
         with open(wordFile, 'w') as outfile:  
             json.dump(self.wordDict, outfile)
-        
-        print(self.wordDict)
-

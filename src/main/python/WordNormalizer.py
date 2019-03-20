@@ -25,7 +25,7 @@ class WordNormalizer():
 
     def formatLine(self, words):
         words = words.strip()
-        test = re.sub(r'[\(\)\*]', '', words)
+        test = re.sub(r'[\(\)\*\.\?\]', '', words)
         formattedWords = re.split(";|,|-|'|!|\r|\n|\s|{|}|[|]", test)
         print(formattedWords)
         for word in formattedWords:
