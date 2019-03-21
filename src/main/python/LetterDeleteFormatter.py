@@ -6,7 +6,8 @@ class LetterDeleteFormatter():
     def __init__(self, aContext):
         self.aContext = aContext
         self.lDeleter = LetterDeleter()
-        self.deletesDict = {}
+        self.deletesDict = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]
+        self.alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","r","s","t","u","v","w","x","y","z"]
 
     def readJson(self):
         file = self.aContext.get_resource('OriginalWords.json')
@@ -15,11 +16,12 @@ class LetterDeleteFormatter():
             return words
 
     def formatJSONDictionary(self, deletedWord, originalWord):
+        ind = self.alphabet.index(deletedWord[0])
         try:
-            self.deletesDict[deletedWord].append(originalWord)
+            self.deletesDict[ind][deletedWord].append(originalWord)
         except:
-            self.deletesDict[deletedWord] = []
-            self.deletesDict[deletedWord].append(originalWord)
+            self.deletesDict[ind][deletedWord] = []
+            self.deletesDict[ind][deletedWord].append(originalWord)
 
     def format(self):
         for key in self.readJson():
@@ -27,9 +29,10 @@ class LetterDeleteFormatter():
             deletedWords = self.lDeleter.delete(key, 2)
             for deletedWord in deletedWords:
                 self.formatJSONDictionary(deletedWord, key)
-        wordFile = self.aContext.get_resource('DeletedWords.json')
-        with open(wordFile, 'w') as outfile:  
-            json.dump(self.deletesDict, outfile)
+        for i in range(26):
+            wordFile = self.aContext.get_resource('DeletedWords' +self.alphabet[i] + '.json')
+            with open(wordFile, 'w') as outfile:  
+                json.dump(self.deletesDict[i], outfile)
         
         print(self.deletesDict)
             
