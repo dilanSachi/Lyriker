@@ -12,6 +12,7 @@ import sqlite3
 from LyricsFormatter import LyricsFormatter
 from JSONManager import JSONManager
 from LetterDeleteFormatter import LetterDeleteFormatter
+from SpellCorrectorNew import SpellCorrectorNew
 
 class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
 
@@ -34,13 +35,22 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         self.ui = Ui_Lyriker()
         self.ui.setupUi(self.Lyriker)
 
+        self.spn = SpellCorrectorNew(self)
+
+
         self.catchSearchBtnClk()
 
         self.Lyriker.show()
         self.app.exec_()
 
     def catchSearchBtnClk(self):
-        self.ui.pushButton.clicked.connect(self.getResults)
+        self.ui.pushButton.clicked.connect(self.test)
+        #self.ui.pushButton.clicked.connect(self.getResults)
+
+    def test(self):
+        uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")
+        print(uInput)
+        self.spn.checkMatchingWords(uInput[0])
 
     def getResults(self):
         uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")
@@ -127,23 +137,24 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
             self.ui.listWidget.addItem("Song : " + songData['Title'])
 
 if __name__ == '__main__':
-    print("d")
+
+    
     appctxt = AppContext()  # 4. Instantiate the subclass
 
-    print("a")
+    #lf = LyricsFormatter(appctxt)
+    #lf.formatLyrics()
 
-    lf = LyricsFormatter(appctxt)
-    lf.formatLyrics()
-
-    print("b")
+    #print("Done")
 
     #jm  = JSONManager(appctxt)
     #jm.writeJSON()
 
-    ldf = LetterDeleteFormatter(appctxt)
-    ldf.format()
+    #ldf = LetterDeleteFormatter(appctxt)
+    #ldf.format()
 
-    print("c")
+    
+    #spn.checkMatchingWords("beautiful")
+
 
     #exit_code = appctxt.run()  # 5. Invoke run()
     #sys.exit(exit_code)
