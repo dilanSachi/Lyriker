@@ -51,6 +51,7 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")
         print(uInput)
         self.spn.checkMatchingWords(uInput[0])
+        self.spn.getMostRelevantWord()
 
     def getResults(self):
         uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")
