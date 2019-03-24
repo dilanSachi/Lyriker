@@ -12,7 +12,8 @@ import sqlite3
 from LyricsFormatter import LyricsFormatter
 from JSONManager import JSONManager
 from LetterDeleteFormatter import LetterDeleteFormatter
-from SpellCorrectorNew import SpellCorrectorNew
+from JsonDB import JsonDB
+from Controller import Controller
 
 class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
 
@@ -35,8 +36,9 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         self.ui = Ui_Lyriker()
         self.ui.setupUi(self.Lyriker)
 
-        self.spn = SpellCorrectorNew(self)
-
+        self.jsondb = JsonDB(self)
+        self.jsondb.loadDeletedWordsDB()
+        self.jsondb.loadOriginalWordsDB()
 
         self.catchSearchBtnClk()
 
@@ -48,10 +50,9 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         #self.ui.pushButton.clicked.connect(self.getResults)
 
     def test(self):
-        uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")
-        print(uInput)
-        self.spn.checkMatchingWords(uInput[0])
-        self.spn.getMostRelevantWord()
+        controller = Controller(self)
+        uInput = str(self.ui.plainTextEdit.toPlainText())
+        controller.processUInput(uInput,  self.jsondb)
 
     def getResults(self):
         uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")

@@ -1,5 +1,7 @@
 class LetterDeleter():
-    edits = []
+
+    def __init__(self):
+        self.edits = []
 
     def deleteLetter(self, word, index):
         newWord = word[0:index] + word[index+1:]

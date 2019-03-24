@@ -1,23 +1,16 @@
 from LetterDeleter import LetterDeleter
 import json
+from JSONManager import JSONManager
 
 class LetterDeleteFormatter():
 
     def __init__(self, aContext):
         self.aContext = aContext
         self.lDeleter = LetterDeleter()
-        temp = {"words":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]}
         self.deletesDict = {"words":[]}
         for i in range(27):
             self.deletesDict["words"].append({"words":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]})
         self.deletesDict["words"].append({})
-        self.alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
-
-    def readJson(self):
-        file = self.aContext.get_resource('OriginalWords.json')
-        with open(file) as json_file:
-            words = json.load(json_file)
-            return words
 
     def formatJSONDictionary(self, deletedWord, originalWord):
         if(96 < ord(deletedWord[0]) < 123):
@@ -58,15 +51,13 @@ class LetterDeleteFormatter():
 """
 
     def format(self):
-        for key in self.readJson():
+        jm = JSONManager(self.aContext)
+        for key in jm.readJson('OriginalWords.json'):
             self.lDeleter.edits = []
             deletedWords = self.lDeleter.delete(key, 2)
             for deletedWord in deletedWords:
                 self.formatJSONDictionary(deletedWord, key)
-        wordFile = self.aContext.get_resource('DeletedWords.json')
-        with open(wordFile, 'w') as outfile:  
-            json.dump(self.deletesDict, outfile)
-        
+        jm.writeJSON('DeletedWords.json', self.deletesDict)
         #print(self.deletesDict)
             
 
