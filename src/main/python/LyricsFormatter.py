@@ -22,10 +22,13 @@ class LyricsFormatter():
 
     def formatJSONDictionary(self, word, count, songNum):
         try:
-            self.wordDict[word][songNum] = count
+            self.wordDict[word][0].append(songNum)
+            self.wordDict[word][1].append(count)
+            #self.wordDict[word][songNum] = count
         except:
-            self.wordDict[word] = {}
-            self.wordDict[word][songNum] = count
+            self.wordDict[word] = [[],[]]
+            self.wordDict[word][0].append(songNum)
+            self.wordDict[word][1].append(count)
 
 
     def formatLyrics(self):

@@ -39,6 +39,7 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         self.jsondb = JsonDB(self)
         self.jsondb.loadDeletedWordsDB()
         self.jsondb.loadOriginalWordsDB()
+        self.jsondb.loadSongsDB()
 
         self.catchSearchBtnClk()
 
@@ -52,7 +53,8 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
     def test(self):
         controller = Controller(self)
         uInput = str(self.ui.plainTextEdit.toPlainText())
-        controller.processUInput(uInput,  self.jsondb)
+        results = controller.processUInput(uInput, self.jsondb)
+        songData = controller.processSongResults(results, self.jsondb)
 
     def getResults(self):
         uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")
