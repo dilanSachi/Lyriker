@@ -22,31 +22,46 @@ class Controller():
         print(mostRelevantWordArray)
         
         for array in mostRelevantWordArray:
+            temp = []
+            tempFrequency = []
             for word in array:
+                
                 try:
                     wordData = originalWordsDB[word]
-                    probableSongs.append(wordData[0])
-                    probableSongsFrequency.append(wordData[1])
+                    temp.append(wordData[0])
+                    tempFrequency.append(wordData[1])
                 except:
                     print("some error")
+            probableSongs.append(temp)
+            probableSongsFrequency.append(tempFrequency)
+        
         i = 0
-        for array in probableSongs:
-            for song in array:
-                try:
-                    ind = mostRelevantSongs.index(song)
-                    if(i != editCounter[ind]):
-                        mostRelevantSongFrquency[ind] +=1
-                        editCounter[ind] += 1
-                except:
-                    mostRelevantSongs.append(song)
-                    mostRelevantSongFrquency.append(1)
-                    editCounter.append(i)
-            i += 1
+        #print("len",len(probableSongs))
+        for arr in probableSongs:
+            #print("hey")
+            for songarr in arr:
+                #print("songarr",len(songarr))
+                for song in songarr:
+                    #print(song)
+                    try:
+                        ind = mostRelevantSongs.index(song)
+                        #print("i",i)
+                        if(i != editCounter[ind]):
+                            mostRelevantSongFrquency[ind] +=1
+                            editCounter[ind] = i
+                    except:
+                        mostRelevantSongs.append(song)
+                        mostRelevantSongFrquency.append(1)
+                        editCounter.append(i)
+            i = i + 1
         results = []
-        for i in range(5):
+        #print(mostRelevantSongs)
+        #print(mostRelevantSongFrquency)
+        for i in range(25):
             if(len(mostRelevantSongFrquency)==i):
                 break
             ind = mostRelevantSongFrquency.index(max(mostRelevantSongFrquency))
+            print(mostRelevantSongFrquency[ind])
             results.append(mostRelevantSongs[ind])
             mostRelevantSongFrquency[ind] = 0
 
@@ -55,9 +70,10 @@ class Controller():
     def processSongResults(self, results, jsondb):
         songsDB = jsondb.getSongsDB()
         songData = []
+        print(songsDB['Songs'][11244]['Title'])
 
         for song in results:
-            songData.append(songsDB["Songs"][song-1]['Title'])
+            songData.append(songsDB["Songs"][song-1])
         
-        print(songData)
+        #print(songData['Title'])
         return songData

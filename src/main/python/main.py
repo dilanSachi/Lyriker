@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 from PyQt5.QtCore import pyqtSlot
 import sys
 from test import Ui_Lyriker
-from SpellCorrector import SpellCorrector
 from SQLiteConnector import SQLiteConnector
 import sqlite3
 from LyricsFormatter import LyricsFormatter
@@ -55,90 +54,11 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         uInput = str(self.ui.plainTextEdit.toPlainText())
         results = controller.processUInput(uInput, self.jsondb)
         songData = controller.processSongResults(results, self.jsondb)
+        for data in songData:
+            self.ui.listWidget.addItem(data['Title'])
 
-    def getResults(self):
-        uInput = str(self.ui.plainTextEdit.toPlainText()).lower().strip().split(" ")
-        ld = LetterDeleter()
-
-        probableWords = []
-
-        for uInputWord in uInput:
-            ld.edits = []
-            deletedWords = ld.delete(uInputWord, 2)
-            deletedWords.append(uInputWord)
-            print(deletedWords)
-
-            w = SpellCorrector(self)
-#############################################################good for now
-            originalWords = []
-            originalWordsFrequency =[]
-
-            for deletedWord in deletedWords:
-                #print(deletedWord)
-                sqltResults = w.search(deletedWord)
-                #print(sqltResults)
-                sqltOriginalWords = sqltResults[0]
-                sqltSongs = sqltResults[1]
-
-                tempOriginalWords = []  # wadipurama galapena wachane aran eka tina sinduwa hyano
-
-                for sqltOriginalWord in sqltOriginalWords:
-                    try:
-                        ind = tempOriginalWords.index(sqltOriginalWord)
-                    except:
-                        tempOriginalWords.append(sqltOriginalWord)
-
-                for tempOriginalWord in tempOriginalWords:
-
-                    try:
-                        ind = originalWords.index(tempOriginalWord)
-                        originalWordsFrequency[ind] = originalWordsFrequency[ind] + 1
-                    except:
-                        originalWords.append(tempOriginalWord)
-                        originalWordsFrequency.append(1)
-
-
-            #print("ow",originalWords)
-            #print("owfo",originalWordsFrequency)
-
-            temp = []
-            for i in range(len(originalWords)):
-                ind = originalWordsFrequency.index(max(originalWordsFrequency))
-                temp.append(originalWords[ind])
-                originalWordsFrequency[ind] = 0
-                if(i==0):
-                    break
-            probableWords.append(temp)
-        sqlt = SQLiteConnector(self)
-        probableSongs = []
-        probableSongsFrequency = []
-        tempI = []
-        print(probableWords)
-        i = 0
-        for temp in probableWords:
-            for ind in temp:
-                results = sqlt.test(ind)
-                #print(result)
-                for result in results:
-                    try:
-                        tempInd = probableSongs.index(result[1])
-                        if(i != tempI[tempInd]):
-                            probableSongsFrequency[tempInd] = probableSongsFrequency[tempInd] + 1
-                    except:
-                        probableSongs.append(result[1])
-                        probableSongsFrequency.append(1)
-                        tempI.append(i)
-            i = i + 1
-        print(probableSongs)
-        print(probableSongsFrequency)
-
-        j = 0
-        for probableSong in probableSongs:
-            if(j==5):
-                break
-            j = j + 1
-            songData = w.getSongData(probableSong-1)
-            self.ui.listWidget.addItem("Song : " + songData['Title'])
+    
+            #self.ui.listWidget.addItem("Song : " + songData['Title'])
 
 if __name__ == '__main__':
 
