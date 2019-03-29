@@ -1,26 +1,34 @@
 from WordNormalizer import WordNormalizer
 import json
+from JSONManager import JSONManager
 
 class LyricsFormatter():
 
     def __init__(self, aContext):
         self.aContext = aContext
-        self.normalizer = WordNormalizer(self.aContext)
+        self.normalizer = WordNormalizer()
         self.wordArray = []
         self.wordDict = {}
+        self.artistNameDict = {}
+        self.jm = JSONManager(self.aContext)
 
-    def readJson(self):
-        file = self.aContext.get_resource('3.json')
-        with open(file) as json_file:
-            songs = json.load(json_file)
-            i = 0
-            lyrics = []
-            for p in songs['Songs']:
-                lyrics.append(p['Lyrics'])
-                i = i + 1
-            return lyrics
+    def getLyrics(self):
+        data = self.jm.readJson('3.json')
+        lyrics = []
+        for song in data['Songs']:
+            lyrics.append(song['Lyrics'])
+        return lyrics
 
-    def formatJSONDictionary(self, word, count, songNum):
+    def getArtistNames(self):
+        data = self.jm.readJson('3.json')
+        artists = []
+        for song in data['Songs']:
+            artists.append(song['Artist'])
+        return artists
+
+    #def getSongNames()
+
+    def formatLyricDictionary(self, word, count, songNum):
         try:
             self.wordDict[word][0].append(songNum)
             self.wordDict[word][1].append(count)
@@ -30,15 +38,29 @@ class LyricsFormatter():
             self.wordDict[word][0].append(songNum)
             self.wordDict[word][1].append(count)
 
+    def formatArtistDictionary(self, name, songNum):
+        try:
+            self.artistNameDict[name].append(songNum)
+        except:
+            self.artistNameDict[name] = []
+            self.artistNameDict[name].append(songNum)
 
     def formatLyrics(self):
         i = 1
-        for lyric in self.readJson():
+        for lyric in self.getLyrics():
             self.normalizer.sOutput = {}
-            normalizedDict = self.normalizer.normalize(lyric)
+            normalizedDict = self.normalizer.normalizeLyrics(lyric)
             for key, value in normalizedDict.items():
-                self.formatJSONDictionary(key, value, i)
+                self.formatLyricDictionary(key, value, i)
             i = i + 1
-        wordFile = self.aContext.get_resource('OriginalWords.json')
-        with open(wordFile, 'w') as outfile:  
-            json.dump(self.wordDict, outfile)
+        self.jm.writeJSON('OriginalWords.json', self.wordDict)
+
+    def formatArtistNames(self):
+        i = 1
+        for artist in self.getArtistNames():
+            self.normalizer.artistNames = []
+            artistNames = self.normalizer.normalizeArtistNames(artist)
+            for artistName in artistNames:
+                self.formatArtistDictionary(artistName, i)
+            i = i + 1
+        self.jm.writeJSON('OriginalArtistNames.json', self.artistNameDict)

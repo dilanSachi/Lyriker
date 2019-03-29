@@ -5,21 +5,27 @@ class JsonDB():
 
     def __init__(self, aContext):
         self.aContext = aContext
+        self.jsonM = JSONManager(self.aContext)
         self.deletedWordsDB = ""
         self.originalWordsDB = ""
         self.songsDB = ""
+        self.originalNamesDB= ""
+        self.deletedNamesDB = ""
 
     def loadDeletedWordsDB(self):
-        jsonM = JSONManager(self.aContext)
-        self.deletedWordsDB = jsonM.readJson('DeletedWords.json')
+        self.deletedWordsDB = self.jsonM.readJson('DeletedWords.json')
 
     def loadOriginalWordsDB(self):
-        jsonM = JSONManager(self.aContext)
-        self.originalWordsDB = jsonM.readJson('OriginalWords.json')
+        self.originalWordsDB = self.jsonM.readJson('OriginalWords.json')
 
     def loadSongsDB(self):
-        jsonM = JSONManager(self.aContext)
-        self.songsDB = jsonM.readJson('3.json')
+        self.songsDB = self.jsonM.readJson('3.json')
+
+    def loadOriginalNamesDB(self):
+        self.originalNamesDB = self.jsonM.readJson('OriginalArtistNames.json')
+
+    def loadDeletedNamesDB(self):
+        self.deletedNamesDB = self.jsonM.readJson('DeletedArtistNames.json')
 
     def getDeletedWordsDB(self):
         return self.deletedWordsDB
@@ -29,4 +35,10 @@ class JsonDB():
 
     def getSongsDB(self):
         return self.songsDB
+
+    def getOriginalNamesDB(self):
+        return self.originalNamesDB
+
+    def getDeletedNamesDB(self):
+        return self.deletedNamesDB
         

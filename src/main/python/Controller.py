@@ -1,12 +1,17 @@
-from SpellCorrectorNew import SpellCorrectorNew
+from SpellCorrector import SpellCorrector
+from WordNormalizer import WordNormalizer
 
 class Controller():
 
     def __init__(self, aContext):
         self.aContext = aContext
 
-    def processUInput(self, uInput, jsondb):
-        spn = SpellCorrectorNew(self.aContext, jsondb)
+    def processLyricInput(self, uInput, jsondb):
+
+        wn = WordNormalizer()
+        uInputDict = wn.normalizeLyrics([uInput])
+
+        spn = SpellCorrector(jsondb)
         originalWordsDB = jsondb.getOriginalWordsDB()
         
         probableSongs = []
@@ -15,10 +20,11 @@ class Controller():
         mostRelevantSongs = []
         mostRelevantSongFrquency = []
         editCounter = []
-        uInputWords = uInput.lower().strip().split(" ")
-        for uInputWord in uInputWords:
+        #uInputWords = uInput.lower().strip().split(" ")
+        for uInputWord in uInputDict:
+            print(uInputWord)
             matchingWords = spn.checkMatchingWords(uInputWord)
-            mostRelevantWordArray.append(spn.getMostRelevantWords(matchingWords))
+            mostRelevantWordArray.append(spn.getMostFrequentWords(matchingWords))
         print(mostRelevantWordArray)
         
         for array in mostRelevantWordArray:
@@ -46,7 +52,7 @@ class Controller():
                     try:
                         ind = mostRelevantSongs.index(song)
                         #print("i",i)
-                        if(i != editCounter[ind]):
+                        if(i > editCounter[ind]):
                             mostRelevantSongFrquency[ind] +=1
                             editCounter[ind] = i
                     except:
@@ -57,7 +63,7 @@ class Controller():
         results = []
         #print(mostRelevantSongs)
         #print(mostRelevantSongFrquency)
-        for i in range(25):
+        for i in range(8):
             if(len(mostRelevantSongFrquency)==i):
                 break
             ind = mostRelevantSongFrquency.index(max(mostRelevantSongFrquency))
@@ -67,10 +73,20 @@ class Controller():
 
         return results
 
+    def processArtistNameInput(self, uInput, jsondb):
+
+        mostFrequentArtists = []
+        wn = WordNormalizer()
+        uInputList = wn.normalizeArtistNames(uInput)
+        for inp in uInputList:
+            sp = SpellCorrector(jsondb)
+            matchingArtists = sp.checkMatchingArtists(inp)
+            mostFrequentArtists.append(sp.getMostFrequentArtistNames(matchingArtists))
+        print(mostFrequentArtists)
+
     def processSongResults(self, results, jsondb):
         songsDB = jsondb.getSongsDB()
         songData = []
-        print(songsDB['Songs'][11244]['Title'])
 
         for song in results:
             songData.append(songsDB["Songs"][song-1])

@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>20</y>
+      <y>30</y>
       <width>331</width>
       <height>31</height>
      </rect>
@@ -27,24 +27,24 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Search Here&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btnLyricSearch">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>20</y>
-      <width>93</width>
+      <x>340</x>
+      <y>70</y>
+      <width>101</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
-     <string>Search</string>
+     <string>Search By Lyric</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="textEdit_2">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>70</y>
+      <x>340</x>
+      <y>120</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -61,10 +61,36 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>120</y>
+      <y>170</y>
       <width>761</width>
-      <height>421</height>
+      <height>371</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnArtistSearch">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>70</y>
+      <width>111</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Search By Artist</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnTitleSearch">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>70</y>
+      <width>101</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Search By Title</string>
     </property>
    </widget>
   </widget>

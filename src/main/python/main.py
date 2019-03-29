@@ -39,6 +39,8 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         self.jsondb.loadDeletedWordsDB()
         self.jsondb.loadOriginalWordsDB()
         self.jsondb.loadSongsDB()
+        self.jsondb.loadOriginalNamesDB()
+        self.jsondb.loadDeletedNamesDB()
 
         self.catchSearchBtnClk()
 
@@ -46,17 +48,24 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         self.app.exec_()
 
     def catchSearchBtnClk(self):
-        self.ui.pushButton.clicked.connect(self.test)
-        #self.ui.pushButton.clicked.connect(self.getResults)
+        self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
+        #self.ui.btnTitleSearch.clicked.connect(self.test)
+        self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
 
-    def test(self):
+    def searchByLyric(self):
         controller = Controller(self)
         uInput = str(self.ui.plainTextEdit.toPlainText())
-        results = controller.processUInput(uInput, self.jsondb)
+        results = controller.processLyricInput(uInput, self.jsondb)
         songData = controller.processSongResults(results, self.jsondb)
         for data in songData:
             self.ui.listWidget.addItem(data['Title'])
 
+    def searchByArtist(self):
+        controller = Controller(self)
+        uInput = str(self.ui.plainTextEdit.toPlainText())
+        results = controller.processArtistNameInput(uInput, self.jsondb)
+
+    #def searchByTitle(self):
     
             #self.ui.listWidget.addItem("Song : " + songData['Title'])
 
@@ -67,6 +76,7 @@ if __name__ == '__main__':
 
     #lf = LyricsFormatter(appctxt)
     #lf.formatLyrics()
+    #lf.formatArtistNames()
 
     #print("Done")
 
@@ -74,7 +84,8 @@ if __name__ == '__main__':
     #jm.writeJSON()
 
     #ldf = LetterDeleteFormatter(appctxt)
-    #ldf.format()
+    #ldf.formatWords()
+    #ldf.formatArtistNames()
 
     
     #spn.checkMatchingWords("beautiful")

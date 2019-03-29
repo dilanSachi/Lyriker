@@ -7,12 +7,13 @@ class LetterDeleteFormatter():
     def __init__(self, aContext):
         self.aContext = aContext
         self.lDeleter = LetterDeleter()
-        self.deletesDict = {"words":[]}
+        self.wordDeletesDict = {"words":[]}
+        self.nameDeletesDict = {}
         for i in range(27):
-            self.deletesDict["words"].append({"words":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]})
-        self.deletesDict["words"].append({})
+            self.wordDeletesDict["words"].append({"words":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]})
+        self.wordDeletesDict["words"].append({})
 
-    def formatJSONDictionary(self, deletedWord, originalWord):
+    def formatWordDict(self, deletedWord, originalWord):
         if(96 < ord(deletedWord[0]) < 123):
             ind1 = ord(deletedWord[0]) - 97
         else:
@@ -23,42 +24,43 @@ class LetterDeleteFormatter():
             else:
                 ind2 = -1
             try:
-                self.deletesDict["words"][ind1]["words"][ind2][deletedWord].append(originalWord)
+                self.wordDeletesDict["words"][ind1]["words"][ind2][deletedWord].append(originalWord)
             except:
-                self.deletesDict["words"][ind1]["words"][ind2][deletedWord] = []
-                self.deletesDict["words"][ind1]["words"][ind2][deletedWord].append(originalWord)
+                self.wordDeletesDict["words"][ind1]["words"][ind2][deletedWord] = []
+                self.wordDeletesDict["words"][ind1]["words"][ind2][deletedWord].append(originalWord)
         else:
             try:
-                self.deletesDict["words"][27][deletedWord].append(originalWord)
+                self.wordDeletesDict["words"][27][deletedWord].append(originalWord)
             except:
-                self.deletesDict["words"][27][deletedWord] = []
-                self.deletesDict["words"][27][deletedWord].append(originalWord)
-        #print(len(deletedWord))
-        
-
-
-        """
+                self.wordDeletesDict["words"][27][deletedWord] = []
+                self.wordDeletesDict["words"][27][deletedWord].append(originalWord)
+    
+    def formatArtistNamesDict(self, deletedName, originalName):
         try:
-            self.deletesDict[ind][len(deletedWord)][deletedWord].append(originalWord)
+            self.nameDeletesDict[deletedName].append(originalName)
         except:
-            try:
-                self.deletesDict[ind][len(deletedWord)][deletedWord] = []
-                self.deletesDict[ind][len(deletedWord)][deletedWord].append(originalWord)
-            except:
-                self.deletesDict[ind][len(deletedWord)] = {}
-                self.deletesDict[ind][len(deletedWord)][deletedWord] = []
-                self.deletesDict[ind][len(deletedWord)][deletedWord].append(originalWord)
-"""
+            self.nameDeletesDict[deletedName] = []
+            self.nameDeletesDict[deletedName].append(originalName)
 
-    def format(self):
+
+    def formatWords(self):
         jm = JSONManager(self.aContext)
         for key in jm.readJson('OriginalWords.json'):
             self.lDeleter.edits = []
             deletedWords = self.lDeleter.delete(key, 2)
             for deletedWord in deletedWords:
-                self.formatJSONDictionary(deletedWord, key)
-        jm.writeJSON('DeletedWords.json', self.deletesDict)
+                self.formatWordDict(deletedWord, key)
+        jm.writeJSON('DeletedWords.json', self.wordDeletesDict)
         #print(self.deletesDict)
+
+    def formatArtistNames(self):
+        jm = JSONManager(self.aContext)
+        for key in jm.readJson('OriginalArtistNames.json'):
+            self.lDeleter.edits = []
+            deletedWords = self.lDeleter.delete(key, 2)
+            for deletedWord in deletedWords:
+                self.formatArtistNamesDict(deletedWord, key)
+        jm.writeJSON('DeletedArtistNames.json', self.nameDeletesDict)
             
 
     
