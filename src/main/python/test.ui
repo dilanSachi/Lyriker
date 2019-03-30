@@ -14,12 +14,12 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPlainTextEdit" name="plainTextEdit">
+   <widget class="QPlainTextEdit" name="txtUInput">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>30</y>
-      <width>331</width>
+      <x>200</x>
+      <y>50</y>
+      <width>391</width>
       <height>31</height>
      </rect>
     </property>
@@ -31,8 +31,8 @@
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>70</y>
-      <width>101</width>
+      <y>90</y>
+      <width>121</width>
       <height>28</height>
      </rect>
     </property>
@@ -43,8 +43,8 @@
    <widget class="QTextEdit" name="textEdit_2">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>120</y>
+      <x>350</x>
+      <y>130</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -57,7 +57,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Results&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="resultListWidget">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -70,8 +70,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="btnArtistSearch">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>70</y>
+      <x>200</x>
+      <y>90</y>
       <width>111</width>
       <height>28</height>
      </rect>
@@ -83,14 +83,53 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="btnTitleSearch">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>70</y>
+      <x>490</x>
+      <y>90</y>
       <width>101</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
      <string>Search By Title</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBrowseSongs">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>131</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Browse Songs</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnViewSuggestoins">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>10</y>
+      <width>131</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>View Suggestions</string>
+    </property>
+   </widget>
+   <widget class="QScrollBar" name="verticalScrollBar">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>170</y>
+      <width>21</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
     </property>
    </widget>
   </widget>

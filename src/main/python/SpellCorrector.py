@@ -8,8 +8,13 @@ class SpellCorrector():
         self.letDelter = LetterDeleter()
         self.jsondb = jsondb
 
-    def checkMatchingWords(self, word):
-        deletedDB = self.jsondb.getDeletedWordsDB()
+    def checkMatches(self, uType, word):
+
+        if(uType == "lyric"):
+            deletedDB = self.jsondb.getDeletedWordsDB()
+        elif(uType == "artist"):
+            deletedDB = self.jsondb.getDeletedNamesDB()
+
         matchingWords = []
         self.letDelter.edits = []
         deletedWords = self.letDelter.delete(word, 2)
@@ -30,20 +35,6 @@ class SpellCorrector():
             except:
                 print("Couldn't find",deletedWord)
         return matchingWords
-
-    def checkMatchingArtists(self, name):
-        deletedNamesDB = self.jsondb.getDeletedNamesDB()
-        #print(deletedNamesDB)
-        matchingArtists = []
-        self.letDelter.edits = []
-        deletedNames = self.letDelter.delete(name, 2)
-        for deletedName in deletedNames:
-            try:
-                matchingArtists.append(deletedNamesDB[deletedName])
-            except:
-                print("Couldn't find",deletedName)
-        print(matchingArtists)
-        return matchingArtists
     
     def getMostFrequentWords(self, matchingWords):
         correctWords =[]
@@ -66,26 +57,3 @@ class SpellCorrector():
             correctWords.append(words[ind])
             wordFrequency[ind] = 0
         return correctWords
-
-    def getMostFrequentArtistNames(self, matchingNames):
-        correctNames = []
-        names = []
-        nameFrequency = []
-        for nameList in matchingNames:
-            for name in nameList:
-                try:
-                    ind = names.index(name)
-                    nameFrequency[ind] = nameFrequency[ind] + 1
-                except:
-                    names.append(name)
-                    nameFrequency.append(1)
-        #print("freq",wordFrequency)
-        #print("word",words)
-        for i in range(6):
-            if(len(nameFrequency)==i):
-                break
-            ind = nameFrequency.index(max(nameFrequency))
-            correctNames.append(names[ind])
-            nameFrequency[ind] = 0
-        #print(correctNames)
-        return correctNames

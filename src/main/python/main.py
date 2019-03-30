@@ -1,5 +1,5 @@
 from fbs_runtime.application_context import ApplicationContext
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from LetterDeleter import LetterDeleter
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
@@ -30,6 +30,10 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         self.db = sqlite3.connect(database)
         #print("afasf")
         self.cursor = self.db.cursor()"""
+
+        self.songsData = []
+        self.controller = Controller(self)
+
         app = QtWidgets.QApplication(sys.argv)
         self.Lyriker = QtWidgets.QMainWindow()
         self.ui = Ui_Lyriker()
@@ -48,30 +52,33 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         self.app.exec_()
 
     def catchSearchBtnClk(self):
+        self.clearResults()
         self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
-        #self.ui.btnTitleSearch.clicked.connect(self.test)
         self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
+        self.ui.resultListWidget.itemClicked.connect(self.Clicked)
+        
+    def Clicked(self, item):
+        row = self.ui.resultListWidget.row(item)
+        self.clearResults()
+        self.controller.displaySongLyric(self.ui.resultListWidget, self.songsData[row])
+        #QMessageBox.information(self.ui.resultListWidget, "ListWidget", "You clicked: "+item.text())
 
     def searchByLyric(self):
-        controller = Controller(self)
-        uInput = str(self.ui.plainTextEdit.toPlainText())
-        results = controller.processLyricInput(uInput, self.jsondb)
-        songData = controller.getSongData(results, self.jsondb)
-        for data in songData:
-            self.ui.listWidget.addItem(data['Title'])
+        uInput = str(self.ui.txtUInput.toPlainText())
+        results = self.controller.processInput('lyric', uInput, self.jsondb)
+        self.songsData = self.controller.getSongsData(results, self.jsondb)
+        for data in self.songsData:
+            self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
 
     def searchByArtist(self):
-        controller = Controller(self)
-        uInput = str(self.ui.plainTextEdit.toPlainText())
-        results = controller.processArtistNameInput(uInput, self.jsondb)
-        print(results)
-        songData = controller.getSongData(results, self.jsondb)
-        for data in songData:
-            self.ui.listWidget.addItem(data['Title'] + " - " + data['Artist'])
+        uInput = str(self.ui.txtUInput.toPlainText())
+        results = self.controller.processInput('artist', uInput, self.jsondb)
+        self.songsData = self.controller.getSongsData(results, self.jsondb)
+        for data in self.songsData:
+            self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
 
-    #def searchByTitle(self):
-    
-            #self.ui.listWidget.addItem("Song : " + songData['Title'])
+    def clearResults(self):
+        self.ui.resultListWidget.clear()
 
 if __name__ == '__main__':
 
