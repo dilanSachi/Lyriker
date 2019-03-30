@@ -69,3 +69,23 @@ class SpellCorrector():
 
     def getMostFrequentArtistNames(self, matchingNames):
         correctNames = []
+        names = []
+        nameFrequency = []
+        for nameList in matchingNames:
+            for name in nameList:
+                try:
+                    ind = names.index(name)
+                    nameFrequency[ind] = nameFrequency[ind] + 1
+                except:
+                    names.append(name)
+                    nameFrequency.append(1)
+        #print("freq",wordFrequency)
+        #print("word",words)
+        for i in range(6):
+            if(len(nameFrequency)==i):
+                break
+            ind = nameFrequency.index(max(nameFrequency))
+            correctNames.append(names[ind])
+            nameFrequency[ind] = 0
+        #print(correctNames)
+        return correctNames

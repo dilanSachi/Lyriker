@@ -2,7 +2,7 @@ from WordNormalizer import WordNormalizer
 import json
 from JSONManager import JSONManager
 
-class LyricsFormatter():
+class JsonOriginalWordCreator():
 
     def __init__(self, aContext):
         self.aContext = aContext
@@ -28,15 +28,19 @@ class LyricsFormatter():
 
     #def getSongNames()
 
-    def formatLyricDictionary(self, word, count, songNum):
+    def formatLyricDictionary(self, word, songNum):
+    #def formatLyricDictionary(self, word, count, songNum):
         try:
-            self.wordDict[word][0].append(songNum)
-            self.wordDict[word][1].append(count)
-            #self.wordDict[word][songNum] = count
+            self.wordDict[word].append(songNum)
+            #self.wordDict[word][0].append(songNum)
+            #self.wordDict[word][1].append(count)
+            
         except:
-            self.wordDict[word] = [[],[]]
-            self.wordDict[word][0].append(songNum)
-            self.wordDict[word][1].append(count)
+            self.wordDict[word] = []
+            self.wordDict[word].append(songNum)
+            #self.wordDict[word] = [[],[]]
+            #self.wordDict[word][0].append(songNum)
+            #self.wordDict[word][1].append(count)
 
     def formatArtistDictionary(self, name, songNum):
         try:
@@ -48,10 +52,12 @@ class LyricsFormatter():
     def formatLyrics(self):
         i = 1
         for lyric in self.getLyrics():
-            self.normalizer.sOutput = {}
+            self.normalizer.sOutput = []
             normalizedDict = self.normalizer.normalizeLyrics(lyric)
-            for key, value in normalizedDict.items():
-                self.formatLyricDictionary(key, value, i)
+            for value in normalizedDict:
+            #for key, value in normalizedDict.items():
+                #self.formatLyricDictionary(key, value, i)
+                self.formatLyricDictionary(value, i)
             i = i + 1
         self.jm.writeJSON('OriginalWords.json', self.wordDict)
 

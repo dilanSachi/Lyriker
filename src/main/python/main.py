@@ -8,7 +8,7 @@ import sys
 from test import Ui_Lyriker
 from SQLiteConnector import SQLiteConnector
 import sqlite3
-from LyricsFormatter import LyricsFormatter
+from JsonOriginalWordCreator import JsonOriginalWordCreator
 from JSONManager import JSONManager
 from LetterDeleteFormatter import LetterDeleteFormatter
 from JsonDB import JsonDB
@@ -56,7 +56,7 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         controller = Controller(self)
         uInput = str(self.ui.plainTextEdit.toPlainText())
         results = controller.processLyricInput(uInput, self.jsondb)
-        songData = controller.processSongResults(results, self.jsondb)
+        songData = controller.getSongData(results, self.jsondb)
         for data in songData:
             self.ui.listWidget.addItem(data['Title'])
 
@@ -64,6 +64,10 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
         controller = Controller(self)
         uInput = str(self.ui.plainTextEdit.toPlainText())
         results = controller.processArtistNameInput(uInput, self.jsondb)
+        print(results)
+        songData = controller.getSongData(results, self.jsondb)
+        for data in songData:
+            self.ui.listWidget.addItem(data['Title'] + " - " + data['Artist'])
 
     #def searchByTitle(self):
     
@@ -74,19 +78,20 @@ if __name__ == '__main__':
     
     appctxt = AppContext()  # 4. Instantiate the subclass
 
-    #lf = LyricsFormatter(appctxt)
-    #lf.formatLyrics()
-    #lf.formatArtistNames()
+    lf = JsonOriginalWordCreator(appctxt)
+    lf.formatLyrics()
+    lf.formatArtistNames()
 
-    #print("Done")
+    print("Done")
 
     #jm  = JSONManager(appctxt)
     #jm.writeJSON()
 
-    #ldf = LetterDeleteFormatter(appctxt)
-    #ldf.formatWords()
-    #ldf.formatArtistNames()
-
+    ldfLyrics = LetterDeleteFormatter(appctxt)
+    ldfLyrics.formatTextAndSaveToJson('OriginalWords.json', 'DeletedWords.json')
+    
+    ldfArtistNames = LetterDeleteFormatter(appctxt)
+    ldfArtistNames.formatTextAndSaveToJson('OriginalArtistNames.json', 'DeletedArtistNames.json')
     
     #spn.checkMatchingWords("beautiful")
 

@@ -8,7 +8,7 @@ class WordNormalizer():
         self.pStemmer = PorterStemmer()
         self.num2Word = NumberToWord()
         self.stopWords = ["i", "me", "my", "we", "the", "on", "and", "in", "to", "s", "t", "a", "an", "at", "of", "is", "or", "by", "it", "as", "be"]
-        self.sOutput = {}
+        self.sOutput = []
         self.artistNames = []
 
     def convertNumbers(self, number):
@@ -41,21 +41,23 @@ class WordNormalizer():
                     num = int(word)
                     numWords = self.convertNumbers(num)
                     for numWord in numWords:
-                        try:
+                        self.sOutput.append(numWord)
+                        """try:
                             self.sOutput[numWord] = self.sOutput[numWord] + 1
                         except:
                             self.sOutput[numWord] = 1
-                        #wordArr.append(numWord)
+                        #wordArr.append(numWord)"""
                 except:
                     #stemmedWord = self.stemWord(word)
                     #if(self.removeStopWords(stemmedWord) and  stemmedWord not in wordArr):
                     if(self.removeStopWords(word)):
                         word = word.lower()
-                        try:
+                        self.sOutput.append(word)
+                        """try:
                             self.sOutput[word] = self.sOutput[word] + 1
                         except:
                             self.sOutput[word] = 1
-                        #wordArr.append(word)
+                        #wordArr.append(word)"""
 
     def normalizeLyrics(self, sInput):
         for parts in sInput:
