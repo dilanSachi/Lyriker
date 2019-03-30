@@ -78,20 +78,20 @@ if __name__ == '__main__':
     
     appctxt = AppContext()  # 4. Instantiate the subclass
 
-    lf = JsonOriginalWordCreator(appctxt)
-    lf.formatLyrics()
-    lf.formatArtistNames()
+    #lf = JsonOriginalWordCreator(appctxt)
+    #lf.formatLyrics()
+    #lf.formatArtistNames()
 
-    print("Done")
+    #print("Done")
 
     #jm  = JSONManager(appctxt)
     #jm.writeJSON()
 
-    ldfLyrics = LetterDeleteFormatter(appctxt)
-    ldfLyrics.formatTextAndSaveToJson('OriginalWords.json', 'DeletedWords.json')
+    #ldfLyrics = LetterDeleteFormatter(appctxt)
+    #ldfLyrics.formatTextAndSaveToJson('OriginalWords.json', 'DeletedWords.json')
     
-    ldfArtistNames = LetterDeleteFormatter(appctxt)
-    ldfArtistNames.formatTextAndSaveToJson('OriginalArtistNames.json', 'DeletedArtistNames.json')
+    #ldfArtistNames = LetterDeleteFormatter(appctxt)
+    #ldfArtistNames.formatTextAndSaveToJson('OriginalArtistNames.json', 'DeletedArtistNames.json')
     
     #spn.checkMatchingWords("beautiful")
 
