@@ -5,16 +5,19 @@ from LetterDeleter import LetterDeleter
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 from PyQt5.QtCore import pyqtSlot
 import sys
-from test import Ui_Lyriker
+from MainWindow import MainWindow
+from SignUpWindow import SignUpWindow
 from SQLiteConnector import SQLiteConnector
 import sqlite3
-from JsonOriginalWordCreator import JsonOriginalWordCreator
-from JSONManager import JSONManager
-from LetterDeleteFormatter import LetterDeleteFormatter
 from JsonDB import JsonDB
 from Controller import Controller
 
-class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
+class AppContext(ApplicationContext):
+
+    def __init__(self):
+        print('do nothing')
+
+class Main(ApplicationContext):           # 1. Subclass ApplicationContext
 
     #def __init__(self):
     #    app = QtWidgets.QApplication([])
@@ -26,64 +29,24 @@ class AppContext(ApplicationContext):           # 1. Subclass ApplicationContext
 #        return self.app.exec()
 
     def __init__(self):
-        """database = self.get_resource('lyriker')
-        self.db = sqlite3.connect(database)
-        #print("afasf")
-        self.cursor = self.db.cursor()"""
-
-        self.songsData = []
-        self.controller = Controller(self)
-
         app = QtWidgets.QApplication(sys.argv)
         self.Lyriker = QtWidgets.QMainWindow()
-        self.ui = Ui_Lyriker()
-        self.ui.setupUi(self.Lyriker)
+        self.loadUi()
+        sys.exit(self.app.exec_())
 
-        self.jsondb = JsonDB(self)
-        self.jsondb.loadDeletedWordsDB()
-        self.jsondb.loadOriginalWordsDB()
-        self.jsondb.loadSongsDB()
-        self.jsondb.loadOriginalNamesDB()
-        self.jsondb.loadDeletedNamesDB()
-
-        self.catchSearchBtnClk()
-
-        self.Lyriker.show()
-        self.app.exec_()
-
-    def catchSearchBtnClk(self):
-        self.clearResults()
-        self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
-        self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
-        self.ui.resultListWidget.itemClicked.connect(self.Clicked)
-        
-    def Clicked(self, item):
-        row = self.ui.resultListWidget.row(item)
-        self.clearResults()
-        self.controller.displaySongLyric(self.ui.resultListWidget, self.songsData[row])
-        #QMessageBox.information(self.ui.resultListWidget, "ListWidget", "You clicked: "+item.text())
-
-    def searchByLyric(self):
-        uInput = str(self.ui.txtUInput.toPlainText())
-        results = self.controller.processInput('lyric', uInput, self.jsondb)
-        self.songsData = self.controller.getSongsData(results, self.jsondb)
-        for data in self.songsData:
-            self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
-
-    def searchByArtist(self):
-        uInput = str(self.ui.txtUInput.toPlainText())
-        results = self.controller.processInput('artist', uInput, self.jsondb)
-        self.songsData = self.controller.getSongsData(results, self.jsondb)
-        for data in self.songsData:
-            self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
-
-    def clearResults(self):
-        self.ui.resultListWidget.clear()
+    def loadUi(self):
+        sqlt = SQLiteConnector(AppContext())
+        if(sqlt.checkDB()):
+            mainWin = MainWindow(self.Lyriker)
+        else:
+            signUpWin = SignUpWindow(self.Lyriker)
+            print('sign up closed')
+        MainWindow(self.Lyriker)
 
 if __name__ == '__main__':
 
     
-    appctxt = AppContext()  # 4. Instantiate the subclass
+    main = Main()  # 4. Instantiate the subclass
 
     #lf = JsonOriginalWordCreator(appctxt)
     #lf.formatLyrics()
@@ -105,4 +68,3 @@ if __name__ == '__main__':
 
     #exit_code = appctxt.run()  # 5. Invoke run()
     #sys.exit(exit_code)
-

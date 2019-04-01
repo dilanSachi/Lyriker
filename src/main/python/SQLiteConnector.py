@@ -3,59 +3,65 @@ import sqlite3
 class SQLiteConnector():
 
     def __init__(self, aContext):
-        database = aContext.get_resource('lyriker')
-        #self.db = sqlite3.connect('src/main/python/lyriker')
-        self.db = sqlite3.connect(database)
-        #print("afasf")
-        self.cursor = self.db.cursor()
+        self.aContext = aContext
+        self.database = self.aContext.get_resource('lyriker.db')
 
-    def createDB(self):
-        #self.db = sqlite3.connect(':memory:')
-        # Creates or opens a file called mydb with a SQLite3 DB
-        self.cursor.execute(''' drop table if exists words''')
-        self.cursor.execute(''' drop table if exists connections''')
-        self.cursor.execute('''
-            CREATE TABLE words(word_id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT)
-        ''')
-        self.cursor.execute('''
-                    CREATE TABLE connections(conn_id INTEGER PRIMARY KEY AUTOINCREMENT, song INTEGER,
-                     originalWordIndex INTEGER, wordIndex INTEGER,  FOREIGN KEY (wordIndex) REFERENCES words (id))
-                ''')
-        self.db.commit()
+    def checkDB(self):
+        print('a')
+        stmt = 'select * from users'
+        userdata = self.readDB(stmt)
+        print(userdata)
+        if(userdata == False or userdata == [('','')]):
+            print('c')
+            stmt = '''create table users
+                    (username text, email text unique, primary key(username))'''
+            self.createTable(stmt)
+            return False
+        return True
+
+    def createTable(self, stmt):
+        try:
+            conn = sqlite3.connect(self.database)
+            cursor = conn.cursor()
+            cursor.execute(stmt)
+            conn.commit()
+            conn.close()
+            return True
+        except:
+            return False
 
     def executeMany(self, statement, arr):
-        cursor = self.db.cursor()
-        cursor.executemany(statement, arr)
-        self.db.commit()
+        try:
+            conn = sqlite3.connect(self.database)
+            cursor = conn.cursor()
+            cursor.executemany(statement, arr)
+            conn.commit()
+            conn.close()
+            return True
+        except:
+            return False
 
-    def readDB(self):
-        cursor = self.db.cursor()
-        cursor.execute('''SELECT id, word from words''')
-        #word = cursor.fetchone()  # retrieve the first row
-        #print(word[1])  # Print the first column retrieved(user's name)
-        all_rows = cursor.fetchall()
-        for row in all_rows:
+    def executeOne(self, statement, values):
+        try:
+            conn = sqlite3.connect(self.database)
+            cursor = conn.cursor()
+            cursor.execute(statement, values)
+            conn.commit()
+            conn.close()
+            return True
+        except:
+            return False
+
+    def readDB(self, statement):
+        try:
+            conn = sqlite3.connect(self.database)
+            cursor = conn.cursor()
+            cursor.execute(statement)
+            allRows = cursor.fetchall()
+            conn.close()
+        #for row in all_rows:
             # row[0] returns the first column in the query (name), row[1] returns email column.
-            print('{0} : {1}'.format(row[0], row[1]))
-
-    def joinDB(self, term):
-        cursor = self.db.cursor()
-        cursor.execute('''SELECT * from connections natural left join (select * from words where word=(?)) as A where word_id=wordIndex''', [term])
-        all_rows = cursor.fetchall()
-        return all_rows
-
-    def dropTable(self):
-        cursor = self.db.cursor()
-        cursor.execute(''' drop table words''')
-
-    def test(self, ind):
-        cursor = self.db.cursor()
-        cursor.execute('''SELECT * from connections natural left join (select * from words where word_id=(?)) as A where word_id=wordIndex''',[ind])
-        all_rows = cursor.fetchall()
-        return all_rows
-
-#sl = SQLite()
-#for i in sl.test(121):
- #   print(i)
-#sl.executeMany()
-#sl.readDB()
+            #print('{0} : {1}'.format(row[0], row[1]))
+            return allRows
+        except:
+            return False

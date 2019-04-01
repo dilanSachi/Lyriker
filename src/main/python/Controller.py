@@ -25,10 +25,10 @@ class Controller():
         editCounter = []
         #uInputWords = uInput.lower().strip().split(" ")
         for uInputWord in uInputDict:
-            print(uInputWord)
+            #print(uInputWord)
             matchingWords = spn.checkMatches(uType, uInputWord)
             mostFrequentWordList.append(spn.getMostFrequentWords(matchingWords))
-        print(mostFrequentWordList)
+        #print(mostFrequentWordList)
         
         for array in mostFrequentWordList:
             temp = []
@@ -65,7 +65,7 @@ class Controller():
             if(len(mostRelevantSongFrquency)==i):
                 break
             ind = mostRelevantSongFrquency.index(max(mostRelevantSongFrquency))
-            print(mostRelevantSongFrquency[ind])
+            #print(mostRelevantSongFrquency[ind])
             results.append(mostRelevantSongs[ind])
             mostRelevantSongFrquency[ind] = 0
 
