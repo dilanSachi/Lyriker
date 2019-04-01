@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 from PyQt5.QtCore import pyqtSlot
 import sys
 from MainWindowUI import Ui_Lyriker
+from LyricsDisplayWindow import LyricsDisplayWindow
 from SQLiteConnector import SQLiteConnector
 import sqlite3
 from JsonDB import JsonDB
@@ -43,27 +44,49 @@ class MainWindow(ApplicationContext):
         self.clearResults()
         self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
         self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
-        self.ui.resultListWidget.itemClicked.connect(self.Clicked)
+        self.ui.resultListWidget.itemClicked.connect(self.processResults)
         
-    def Clicked(self, item):
+    def processResults(self, item):
         row = self.ui.resultListWidget.row(item)
+        self.saveToSearchHistory(self.songsData[row]['Title'], self.songsData[row]['Artist'])
         self.clearResults()
-        self.controller.displaySongLyric(self.ui.resultListWidget, self.songsData[row])
+        self.qMainWindow.hide()
+        LyricsDisplayWindow(self.qMainWindow, self.songsData[row])
+        #self.displaySongLyric(self.ui.resultListWidget, self.songsData[row])
+        
         #QMessageBox.information(self.ui.resultListWidget, "ListWidget", "You clicked: "+item.text())
 
     def searchByLyric(self):
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('lyric', uInput, self.jsondb)
         self.songsData = self.controller.getSongsData(results, self.jsondb)
-        for data in self.songsData:
-            self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
+        self.displayResults(self.songsData)
 
     def searchByArtist(self):
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('artist', uInput, self.jsondb)
         self.songsData = self.controller.getSongsData(results, self.jsondb)
+        self.displayResults(self.songsData)
+
+    def displayResults(self, songsData):
         for data in self.songsData:
             self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
+
+    def saveToSearchHistory(self, title, artist):
+        #print('Bye')
+        sqlt = SQLiteConnector(self)
+        stmt = '''select * from searchhistory where songtitle = ? and artist = ?'''
+        data = sqlt.readDB(stmt, [title, artist])
+        #print('data',data)
+        if(data == False or data == []):
+            stmt2 = '''insert into searchhistory(songtitle, artist, frequency) values (?, ?, ?)'''
+            sqlt.executeOne(stmt2, [title, artist, 1])
+        else:
+            #print(data)
+            frequency = int(data[0][2]) + 1
+            stmt2 = '''update searchhistory set frequency = ? where songtitle = ? and artist = ?'''
+            sqlt.executeOne(stmt2, [frequency, title, artist])
+        #print('Hi')
 
     def clearResults(self):
         self.ui.resultListWidget.clear()

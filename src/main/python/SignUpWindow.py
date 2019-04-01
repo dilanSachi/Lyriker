@@ -46,9 +46,7 @@ class SignUpWindow(ApplicationContext):
         stmt = 'insert into users(username, email) values (?, ?)'
         sqlt = SQLiteConnector(self)
         if(sqlt.executeOne(stmt, [username, email])):
-            print('asf')
             self.qMainWindow.hide()
-            print('inside sign up')
             MainWindow(self.qMainWindow)
             #self.close()
             #self.Lyriker.close()

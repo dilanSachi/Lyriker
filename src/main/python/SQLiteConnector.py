@@ -7,15 +7,18 @@ class SQLiteConnector():
         self.database = self.aContext.get_resource('lyriker.db')
 
     def checkDB(self):
-        print('a')
+        #print('a')
         stmt = 'select * from users'
-        userdata = self.readDB(stmt)
-        print(userdata)
+        userdata = self.readDB(stmt, [])
+        #print(userdata)
         if(userdata == False or userdata == [('','')]):
-            print('c')
+            #print('c')
             stmt = '''create table users
                     (username text, email text unique, primary key(username))'''
+            stmt2 = '''create table searchhistory
+                    (songtitle text, artist text, frequency number, primary key(songtitle, artist))'''
             self.createTable(stmt)
+            self.createTable(stmt2)
             return False
         return True
 
@@ -52,11 +55,11 @@ class SQLiteConnector():
         except:
             return False
 
-    def readDB(self, statement):
+    def readDB(self, statement, values):
         try:
             conn = sqlite3.connect(self.database)
             cursor = conn.cursor()
-            cursor.execute(statement)
+            cursor.execute(statement, values)
             allRows = cursor.fetchall()
             conn.close()
         #for row in all_rows:

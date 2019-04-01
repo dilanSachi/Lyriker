@@ -12,11 +12,6 @@ import sqlite3
 from JsonDB import JsonDB
 from Controller import Controller
 
-class AppContext(ApplicationContext):
-
-    def __init__(self):
-        print('do nothing')
-
 class Main(ApplicationContext):           # 1. Subclass ApplicationContext
 
     #def __init__(self):
@@ -35,13 +30,11 @@ class Main(ApplicationContext):           # 1. Subclass ApplicationContext
         sys.exit(self.app.exec_())
 
     def loadUi(self):
-        sqlt = SQLiteConnector(AppContext())
+        sqlt = SQLiteConnector(self)
         if(sqlt.checkDB()):
-            mainWin = MainWindow(self.Lyriker)
+            MainWindow(self.Lyriker)
         else:
-            signUpWin = SignUpWindow(self.Lyriker)
-            print('sign up closed')
-        MainWindow(self.Lyriker)
+            SignUpWindow(self.Lyriker)
 
 if __name__ == '__main__':
 

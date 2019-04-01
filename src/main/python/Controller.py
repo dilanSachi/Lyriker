@@ -80,9 +80,3 @@ class Controller():
         
         #print(songData['Title'])
         return songsData
-
-    def displaySongLyric(self, resultListWidget, songData):
-        songStr = ""
-        for part in songData['Lyrics']:
-            songStr = songStr + part
-        resultListWidget.addItem(songStr)
