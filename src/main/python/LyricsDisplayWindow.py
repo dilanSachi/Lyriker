@@ -8,16 +8,41 @@ from LyricsDisplayWindowUI import Ui_Lyrics
 from SQLiteConnector import SQLiteConnector
 import sqlite3
 from Controller import Controller
+from MainWindowUI import Ui_Lyriker
 
 class LyricsDisplayWindow(ApplicationContext):
 
-    def __init__(self, qMainWindow, songData):
+    def __init__(self, lyrikerWindow, songData, mainWindow):
+        super().__init__()
 
-        self.qMainWindow = qMainWindow
+        self.lyrikerWindow = QtWidgets.QMainWindow()
+
+        self.mainWindow = mainWindow
+        self.lyriker = lyrikerWindow
         self.ui = Ui_Lyrics()
-        self.ui.setupUi(self.qMainWindow)
+        self.ui.setupUi(self.lyrikerWindow)
         self.setSongDataToUI(songData)
-        self.qMainWindow.show()
+        
+        self.lyrikerWindow.show()
+        self.catchButtonClick()
+
+        #self.qMainWindow.show()
+        #sys.exit(self.app.exec_())
+
+    def catchButtonClick(self):
+        print('connected')
+        self.ui.btnBack.clicked.connect(self.goBackToMainWindow)
+
+    def goBackToMainWindow(self):
+        print('hgc')
+        self.lyrikerWindow.hide()
+        #self.ui = Ui_Lyriker()
+        #self.ui.setupUi(self.lyrikerWindow)
+        #self.mainWindow.loadJsonFiles()
+        self.lyriker.show()
+        #self.mainWindow.catchSearchBtnClk()
+        self.mainWindow.displayResults()
+        
 
     def setSongDataToUI(self, songData):
         self.ui.lblTitle.setText(songData['Title'])

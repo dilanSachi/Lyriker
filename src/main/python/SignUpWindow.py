@@ -4,36 +4,30 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from LetterDeleter import LetterDeleter
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 from PyQt5.QtCore import pyqtSlot
-from SignUpUI import Ui_signUpWindow
 import sys
+from SignUpUI import Ui_signUpWindow
 from SQLiteConnector import SQLiteConnector
 from MainWindow import MainWindow
 
 class SignUpWindow(ApplicationContext):
 
-    def __init__(self, qMainWindow):
-        """
-        #app = QtWidgets.QApplication(sys.argv)
-        print("Sign up init")
-        self.Lyriker = QtWidgets.QMainWindow()
-        self.ui = Ui_signUpWindow()
-        self.ui.setupUi(self.Lyriker)
+    def __init__(self, lyrikerWindow):
+        super().__init__()
 
-        self.catchSignUpBtnClk()
+        self.lyrikerWindow = QtWidgets.QMainWindow()
 
-        self.Lyriker.show()
-        print("asfasfasfaasfasfas")
-        #sys.exit(self.app.exec_())"""
-        #app = QtWidgets.QApplication(sys.argv)
-        self.qMainWindow = qMainWindow
+        self.lyriker = lyrikerWindow
+        #self.qMainWindow = qMainWindow
         print("Sign up init")
         self.ui = Ui_signUpWindow()
-        self.ui.setupUi(self.qMainWindow)
+        self.ui.setupUi(self.lyrikerWindow)
+
+        self.lyrikerWindow.show()
 
         self.catchSignUpBtnClk()
-
-        self.qMainWindow.show()
-        print("asfasfasfaasfasfas")
+        
+        #self.qMainWindow.show()
+        #print("asfasfasfaasfasfas")
         sys.exit(self.app.exec_())
 
     def catchSignUpBtnClk(self):
@@ -46,8 +40,9 @@ class SignUpWindow(ApplicationContext):
         stmt = 'insert into users(username, email) values (?, ?)'
         sqlt = SQLiteConnector(self)
         if(sqlt.executeOne(stmt, [username, email])):
-            self.qMainWindow.hide()
-            MainWindow(self.qMainWindow)
+            self.lyrikerWindow.hide()
+            # self.qMainWindow.hide()
+            MainWindow(self.lyrikerWindow, True)
             #self.close()
             #self.Lyriker.close()
             #self.app.exit()

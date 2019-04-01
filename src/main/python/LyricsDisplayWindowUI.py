@@ -15,7 +15,7 @@ class Ui_Lyrics(object):
         self.centralwidget = QtWidgets.QWidget(Lyrics)
         self.centralwidget.setObjectName("centralwidget")
         self.lblTitle = QtWidgets.QLabel(self.centralwidget)
-        self.lblTitle.setGeometry(QtCore.QRect(210, 20, 371, 31))
+        self.lblTitle.setGeometry(QtCore.QRect(110, 20, 591, 31))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)

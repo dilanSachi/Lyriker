@@ -14,23 +14,26 @@ from Controller import Controller
 
 class MainWindow(ApplicationContext):
 
-    def __init__(self, qMainWindow):
+    def __init__(self, lyrikerWindow, check):
+        super().__init__()
+
+        self.lyrikerWindow = QtWidgets.QMainWindow()
+        self.lyriker = lyrikerWindow
 
         self.songsData = []
         self.controller = Controller(self)
 
-        #app = QtWidgets.QApplication(sys.argv)
-        #self.Lyriker = QtWidgets.QMainWindow()
-        self.qMainWindow = qMainWindow
         self.ui = Ui_Lyriker()
-        self.ui.setupUi(self.qMainWindow)
+        self.ui.setupUi(self.lyrikerWindow)
 
         self.loadJsonFiles()
         self.catchSearchBtnClk()
 
-        self.qMainWindow.show()
-        ##self.app.exec_()
-        #sys.exit(self.app.exec_())
+        self.lyrikerWindow.show()
+        
+        #self.qMainWindow.show()
+        if(check == False):
+            sys.exit(self.app.exec_())
 
     def loadJsonFiles(self):
         self.jsondb = JsonDB(self)
@@ -41,7 +44,6 @@ class MainWindow(ApplicationContext):
         self.jsondb.loadDeletedNamesDB()
 
     def catchSearchBtnClk(self):
-        self.clearResults()
         self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
         self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
         self.ui.resultListWidget.itemClicked.connect(self.processResults)
@@ -50,25 +52,30 @@ class MainWindow(ApplicationContext):
         row = self.ui.resultListWidget.row(item)
         self.saveToSearchHistory(self.songsData[row]['Title'], self.songsData[row]['Artist'])
         self.clearResults()
-        self.qMainWindow.hide()
-        LyricsDisplayWindow(self.qMainWindow, self.songsData[row])
-        #self.displaySongLyric(self.ui.resultListWidget, self.songsData[row])
+        
+        self.lyrikerWindow.hide()
+
+        #self.qMainWindow.hide()
+        LyricsDisplayWindow(self.lyrikerWindow, self.songsData[row], self)
         
         #QMessageBox.information(self.ui.resultListWidget, "ListWidget", "You clicked: "+item.text())
 
     def searchByLyric(self):
+        self.clearResults()
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('lyric', uInput, self.jsondb)
         self.songsData = self.controller.getSongsData(results, self.jsondb)
-        self.displayResults(self.songsData)
+        self.displayResults()
 
     def searchByArtist(self):
+        print('Hi')
+        self.clearResults()
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('artist', uInput, self.jsondb)
         self.songsData = self.controller.getSongsData(results, self.jsondb)
-        self.displayResults(self.songsData)
+        self.displayResults()
 
-    def displayResults(self, songsData):
+    def displayResults(self):
         for data in self.songsData:
             self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
 

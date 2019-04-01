@@ -25,21 +25,25 @@ class Main(ApplicationContext):           # 1. Subclass ApplicationContext
 
     def __init__(self):
         app = QtWidgets.QApplication(sys.argv)
-        self.Lyriker = QtWidgets.QMainWindow()
+        self.lyrikerWindow = QtWidgets.QMainWindow()
+        #self.ui = Ui_Dialog()
+        #self.ui.setupUi(self.Lyriker)
         self.loadUi()
-        sys.exit(self.app.exec_())
+        sys.exit(app.exec_())
 
     def loadUi(self):
         sqlt = SQLiteConnector(self)
         if(sqlt.checkDB()):
-            MainWindow(self.Lyriker)
+            MainWindow(self.lyrikerWindow, False)
         else:
-            SignUpWindow(self.Lyriker)
+            SignUpWindow(self.lyrikerWindow)
+            
 
 if __name__ == '__main__':
 
     
     main = Main()  # 4. Instantiate the subclass
+    
 
     #lf = JsonOriginalWordCreator(appctxt)
     #lf.formatLyrics()
