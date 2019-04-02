@@ -42,8 +42,7 @@ class Main(ApplicationContext):           # 1. Subclass ApplicationContext
 if __name__ == '__main__':
 
     
-    main = Main()  # 4. Instantiate the subclass
-    
+    main = Main()  # 4. Instantiate the subclass    
 
     #lf = JsonOriginalWordCreator(appctxt)
     #lf.formatLyrics()

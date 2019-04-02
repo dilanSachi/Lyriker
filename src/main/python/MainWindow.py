@@ -2,11 +2,10 @@ from fbs_runtime.application_context import ApplicationContext
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from LetterDeleter import LetterDeleter
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QAction
 from PyQt5.QtCore import pyqtSlot
 import sys
 from MainWindowUI import Ui_Lyriker
-from LyricsDisplayWindow import LyricsDisplayWindow
 from SQLiteConnector import SQLiteConnector
 import sqlite3
 from JsonDB import JsonDB
@@ -14,11 +13,11 @@ from Controller import Controller
 
 class MainWindow(ApplicationContext):
 
+
     def __init__(self, lyrikerWindow, check):
         super().__init__()
 
-        self.lyrikerWindow = QtWidgets.QMainWindow()
-        self.lyriker = lyrikerWindow
+        self.lyrikerWindow = lyrikerWindow
 
         self.songsData = []
         self.controller = Controller(self)
@@ -30,7 +29,8 @@ class MainWindow(ApplicationContext):
         self.catchSearchBtnClk()
 
         self.lyrikerWindow.show()
-        
+        #self.ui.show()
+
         #self.qMainWindow.show()
         if(check == False):
             sys.exit(self.app.exec_())
@@ -46,30 +46,38 @@ class MainWindow(ApplicationContext):
     def catchSearchBtnClk(self):
         self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
         self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
-        self.ui.resultListWidget.itemClicked.connect(self.processResults)
         
     def processResults(self, item):
+        print('jingi biriz')
         row = self.ui.resultListWidget.row(item)
         self.saveToSearchHistory(self.songsData[row]['Title'], self.songsData[row]['Artist'])
         self.clearResults()
-        
-        self.lyrikerWindow.hide()
 
-        #self.qMainWindow.hide()
-        LyricsDisplayWindow(self.lyrikerWindow, self.songsData[row], self)
+        self.displayOther(self.songsData[row])
         
-        #QMessageBox.information(self.ui.resultListWidget, "ListWidget", "You clicked: "+item.text())
+    def displayOther(self, songData):
+        self.clearResults()
+        self.ui.resultListWidget.itemClicked.disconnect(self.processResults)
+        print('hujjariz')
+        self.ui.resultListWidget.addItem(songData['Title'])
+        self.ui.resultListWidget.addItem(songData['Artist'])
+        self.ui.resultListWidget.addItem('Still working')
+        songStr = ""
+        for part in songData['Lyrics']:
+            songStr = songStr + part
+        self.ui.resultListWidget.addItem(songStr)
 
     def searchByLyric(self):
         self.clearResults()
+        self.ui.resultListWidget.itemClicked.connect(self.processResults)
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('lyric', uInput, self.jsondb)
         self.songsData = self.controller.getSongsData(results, self.jsondb)
         self.displayResults()
 
     def searchByArtist(self):
-        print('Hi')
         self.clearResults()
+        self.ui.resultListWidget.itemClicked.connect(self.processResults)
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('artist', uInput, self.jsondb)
         self.songsData = self.controller.getSongsData(results, self.jsondb)

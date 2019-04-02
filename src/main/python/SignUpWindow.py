@@ -14,9 +14,7 @@ class SignUpWindow(ApplicationContext):
     def __init__(self, lyrikerWindow):
         super().__init__()
 
-        self.lyrikerWindow = QtWidgets.QMainWindow()
-
-        self.lyriker = lyrikerWindow
+        self.lyrikerWindow = lyrikerWindow
         #self.qMainWindow = qMainWindow
         print("Sign up init")
         self.ui = Ui_signUpWindow()
