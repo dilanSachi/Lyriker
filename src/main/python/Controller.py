@@ -7,7 +7,7 @@ class Controller():
         self.aContext = aContext
 
     def processInput(self, uType, uInput, jsondb):
-
+        print(uInput)
         wn = WordNormalizer()
         uInputDict = wn.normalizeLyrics([uInput])
 

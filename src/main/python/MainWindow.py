@@ -9,6 +9,7 @@ from MainWindowUI import Ui_Lyriker
 from SQLiteConnector import SQLiteConnector
 import sqlite3
 from JsonDB import JsonDB
+from HistoryAnalyzer import HistoryAnalyzer
 from Controller import Controller
 
 class MainWindow(ApplicationContext):
@@ -46,18 +47,23 @@ class MainWindow(ApplicationContext):
     def catchSearchBtnClk(self):
         self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
         self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
+        self.ui.btnViewSuggestions.clicked.connect(self.displaySuggestions)
         
     def processResults(self, item):
         print('jingi biriz')
         row = self.ui.resultListWidget.row(item)
         self.saveToSearchHistory(self.songsData[row]['Title'], self.songsData[row]['Artist'])
         self.clearResults()
-
-        self.displayOther(self.songsData[row])
-        
-    def displayOther(self, songData):
-        self.clearResults()
         self.ui.resultListWidget.itemClicked.disconnect(self.processResults)
+        self.displayLyrics(self.songsData[row])
+
+    def displaySuggestions(self):
+        ha = HistoryAnalyzer(self, self.jsondb)
+        favArtists = ha.calcFavArtists()
+        self.songsData = ha.getSongSuggestions(favArtists)
+        self.displayResults()
+        
+    def displayLyrics(self, songData):
         print('hujjariz')
         self.ui.resultListWidget.addItem(songData['Title'])
         self.ui.resultListWidget.addItem(songData['Artist'])
@@ -68,7 +74,7 @@ class MainWindow(ApplicationContext):
         self.ui.resultListWidget.addItem(songStr)
 
     def searchByLyric(self):
-        self.clearResults()
+
         self.ui.resultListWidget.itemClicked.connect(self.processResults)
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('lyric', uInput, self.jsondb)
@@ -76,7 +82,7 @@ class MainWindow(ApplicationContext):
         self.displayResults()
 
     def searchByArtist(self):
-        self.clearResults()
+        
         self.ui.resultListWidget.itemClicked.connect(self.processResults)
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('artist', uInput, self.jsondb)
@@ -84,6 +90,7 @@ class MainWindow(ApplicationContext):
         self.displayResults()
 
     def displayResults(self):
+        self.clearResults()
         for data in self.songsData:
             self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
 
