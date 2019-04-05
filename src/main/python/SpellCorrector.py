@@ -33,7 +33,8 @@ class SpellCorrector():
                 else:
                     matchingWords.append(deletedDB["words"][27][deletedWord])
             except:
-                print("Couldn't find",deletedWord)
+                #print("Couldn't find",deletedWord)
+                a = True
         return matchingWords
     
     def getMostFrequentWords(self, matchingWords):

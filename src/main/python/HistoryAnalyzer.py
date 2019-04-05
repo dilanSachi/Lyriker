@@ -12,6 +12,7 @@ class HistoryAnalyzer():
         sqlt = SQLiteConnector(self.aContext)
         stmt = '''select * from searchhistory'''
         history = sqlt.readDB(stmt, [])
+        print(history)
         searchedArtists = []
         searchedArtistsFrequency = []
         for song in history:
