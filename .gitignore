@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+/src/main/resources/base/
+
 # Distribution / packaging
 .Python
 build/

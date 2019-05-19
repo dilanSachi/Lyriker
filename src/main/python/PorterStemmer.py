@@ -7,6 +7,7 @@ class PorterStemmer:
             return True
 
     def isConsonant(self, word, i):
+        print(word)
         letter = word[i]
         if self.isCons(letter):
             if letter == 'y' and self.isCons(word[i-1]):
@@ -284,6 +285,7 @@ class PorterStemmer:
         return word
 
     def stem(self, word):
+        print(word)
         word = self.step1a(word)
         word = self.step1b(word)
         word = self.step1c(word)
@@ -295,8 +297,8 @@ class PorterStemmer:
         return word
 
 #p = PorterStemmer()
-##print(p.stem("beautiful"))
+#print(p.stem("beautiful"))
 #print(p.stem("learned"))
 #print(p.stem("beauty"))
-#print(p.stem("beauti"))
+#print(p.stem("beautifully"))
 #print(p.stem("beautiful"))

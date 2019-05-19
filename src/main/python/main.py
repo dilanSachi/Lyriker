@@ -11,6 +11,8 @@ from SQLiteConnector import SQLiteConnector
 import sqlite3
 from JsonDB import JsonDB
 from Controller import Controller
+from JsonOriginalWordCreator import JsonOriginalWordCreator
+from LetterDeleteFormatter import LetterDeleteFormatter
 
 class Main(ApplicationContext):           # 1. Subclass ApplicationContext
 
@@ -38,29 +40,38 @@ class Main(ApplicationContext):           # 1. Subclass ApplicationContext
         else:
             SignUpWindow(self.lyrikerWindow)
             
+class Test(ApplicationContext):
+
+    def printer():
+        print("Test")
+
 
 if __name__ == '__main__':
 
     
     main = Main()  # 4. Instantiate the subclass    
+"""
+    main = Test()
 
-    #lf = JsonOriginalWordCreator(appctxt)
-    #lf.formatLyrics()
-    #lf.formatArtistNames()
+    print("asf")
 
-    #print("Done")
+    lf = JsonOriginalWordCreator(main)
+    lf.formatLyrics()
+    lf.formatArtistNames()
+    lf.formatAlbumNames()
 
-    #jm  = JSONManager(appctxt)
-    #jm.writeJSON()
+    print("Done")
 
-    #ldfLyrics = LetterDeleteFormatter(appctxt)
-    #ldfLyrics.formatTextAndSaveToJson('OriginalWords.json', 'DeletedWords.json')
+    ldfLyrics = LetterDeleteFormatter(main)
+    ldfLyrics.formatTextAndSaveToJson('OriginalWords.json', 'DeletedWords.json')
     
-    #ldfArtistNames = LetterDeleteFormatter(appctxt)
-    #ldfArtistNames.formatTextAndSaveToJson('OriginalArtistNames.json', 'DeletedArtistNames.json')
-    
-    #spn.checkMatchingWords("beautiful")
+    ldfArtistNames = LetterDeleteFormatter(main)
+    ldfArtistNames.formatTextAndSaveToJson('OriginalArtistNames.json', 'DeletedArtistNames.json')
 
+    ldfAlbumNames = LetterDeleteFormatter(main)
+    ldfAlbumNames.formatTextAndSaveToJson('OriginalAlbumNames.json', 'DeletedAlbumNames.json')
+ 
+"""
 
     #exit_code = appctxt.run()  # 5. Invoke run()
     #sys.exit(exit_code)

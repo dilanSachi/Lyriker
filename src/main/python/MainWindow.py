@@ -36,7 +36,7 @@ class MainWindow(ApplicationContext):
 
         #self.qMainWindow.show()
         if(check == False):
-            sys.exit(self.app.exec_())
+          sys.exit(self.app.exec_())
 
     def loadJsonFiles(self):
         self.jsondb = JsonDB(self)
@@ -45,10 +45,13 @@ class MainWindow(ApplicationContext):
         self.jsondb.loadSongsDB()
         self.jsondb.loadOriginalNamesDB()
         self.jsondb.loadDeletedNamesDB()
+        self.jsondb.loadOriginalAlbumsDB()
+        self.jsondb.loadDeletedAlbumsDB()
 
     def catchSearchBtnClk(self):
         self.ui.btnLyricSearch.clicked.connect(self.searchByLyric)
         self.ui.btnArtistSearch.clicked.connect(self.searchByArtist)
+        self.ui.btnAlbumSearch.clicked.connect(self.searchByAlbum)
         self.ui.btnBrowseSongs.clicked.connect(self.browseSongs)
         self.ui.btnViewSuggestions.clicked.connect(self.displaySuggestions)
 
@@ -144,6 +147,15 @@ class MainWindow(ApplicationContext):
         self.ui.resultListWidget.itemClicked.connect(self.processResults)
         self.displayResults()
 
+    def searchByAlbum(self):
+        
+        #self.ui.resultListWidget.itemClicked.connect(self.processResults)
+        uInput = str(self.ui.txtUInput.toPlainText())
+        results = self.controller.processInput('album', uInput, self.jsondb)
+        self.songsData = self.controller.getSongsData(results, self.jsondb)
+        self.ui.resultListWidget.itemClicked.connect(self.processResults)
+        self.displayResults()
+
     def displayResults(self):
         self.clearResults()
         for data in self.songsData:
@@ -154,11 +166,13 @@ class MainWindow(ApplicationContext):
         sqlt = SQLiteConnector(self)
         stmt = '''select * from searchhistory where songtitle = ? and artist = ?'''
         data = sqlt.readDB(stmt, [title, artist])
-        #print('data',data)
+        print('data',data)
         if(data == False or data == []):
+            print("hey")
             stmt2 = '''insert into searchhistory(songtitle, artist, frequency) values (?, ?, ?)'''
             sqlt.executeOne(stmt2, [title, artist, 1])
         else:
+            print("O yay")
             #print(data)
             frequency = int(data[0][2]) + 1
             stmt2 = '''update searchhistory set frequency = ? where songtitle = ? and artist = ?'''

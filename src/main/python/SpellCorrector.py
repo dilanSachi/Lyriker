@@ -1,6 +1,7 @@
 from LetterDeleter import LetterDeleter
 import json
 from JsonDB import JsonDB
+from PorterStemmer import PorterStemmer
 
 class SpellCorrector():
 
@@ -14,10 +15,13 @@ class SpellCorrector():
             deletedDB = self.jsondb.getDeletedWordsDB()
         elif(uType == "artist"):
             deletedDB = self.jsondb.getDeletedNamesDB()
+        elif(uType == "album"):
+            deletedDB = self.jsondb.getDeletedAlbumsDB()
 
         matchingWords = []
         self.letDelter.edits = []
         deletedWords = self.letDelter.delete(word, 2)
+        deletedWords.append(word)
         for deletedWord in deletedWords:
             try:
                 if(len(deletedWord)>1):
@@ -38,23 +42,38 @@ class SpellCorrector():
         return matchingWords
     
     def getMostFrequentWords(self, matchingWords):
-        correctWords =[]
-        words = []
-        wordFrequency = []
-        for wordList in matchingWords:
-            for word in wordList:
-                try:
-                    ind = words.index(word)
-                    wordFrequency[ind] = wordFrequency[ind] + 1
-                except:
-                    words.append(word)
-                    wordFrequency.append(1)
-        #print("freq",wordFrequency)
-        #print("word",words)
-        for i in range(6):
-            if(len(wordFrequency)==i):
-                break
-            ind = wordFrequency.index(max(wordFrequency))
-            correctWords.append(words[ind])
-            wordFrequency[ind] = 0
-        return correctWords
+        try:
+            correctWords =[]
+            words = []
+            wordFrequency = []
+            for wordList in matchingWords:
+                for word in wordList:
+                    try:
+                        ind = words.index(word)
+                        wordFrequency[ind] = wordFrequency[ind] + 1
+                    except:
+                        words.append(word)
+                        wordFrequency.append(1)
+            #print("freq",wordFrequency)
+            #print("word",words)
+            maxFrequency = max(wordFrequency)
+            for i in range(100):
+                if(len(wordFrequency)==i):
+                    break
+                ind = wordFrequency.index(max(wordFrequency))
+                correctWords.append(words[ind])
+                wordFrequency[ind] = 0
+            return correctWords, maxFrequency
+        except:
+            return [],0
+
+    def stemInputAndCheckMatch(self, uType, word):
+        ps = PorterStemmer()
+        stemmedWord = ps.stem(word)
+        print("stem",stemmedWord)
+        matchingWords = self.checkMatches(uType, stemmedWord)
+        data = self.getMostFrequentWords(matchingWords)
+        if(data[1] != 1):
+            return data[0]
+        else:
+            return []

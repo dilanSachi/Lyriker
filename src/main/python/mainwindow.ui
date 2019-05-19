@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>624</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>200</x>
       <y>50</y>
-      <width>391</width>
+      <width>401</width>
       <height>31</height>
      </rect>
     </property>
@@ -63,7 +63,7 @@ p, li { white-space: pre-wrap; }
       <x>20</x>
       <y>170</y>
       <width>761</width>
-      <height>371</height>
+      <height>401</height>
      </rect>
     </property>
     <property name="verticalScrollBarPolicy">
@@ -95,17 +95,17 @@ p, li { white-space: pre-wrap; }
      <string>Search By Artist</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnTitleSearch">
+   <widget class="QPushButton" name="btnAlbumSearch">
     <property name="geometry">
      <rect>
       <x>490</x>
       <y>90</y>
-      <width>101</width>
+      <width>111</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
-     <string>Search By Title</string>
+     <string>Search By Album</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnBrowseSongs">
@@ -121,7 +121,7 @@ p, li { white-space: pre-wrap; }
      <string>Browse Songs</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnViewSuggestoins">
+   <widget class="QPushButton" name="btnViewSuggestions">
     <property name="geometry">
      <rect>
       <x>170</x>

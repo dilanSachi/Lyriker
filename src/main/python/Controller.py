@@ -16,6 +16,8 @@ class Controller():
             originalDB = jsondb.getOriginalWordsDB()
         elif(uType == "artist"):
             originalDB = jsondb.getOriginalNamesDB()
+        elif(uType == "album"):
+            originalDB = jsondb.getOriginalAlbumsDB()
         
         probableSongs = []
         probableSongsFrequency = []
@@ -27,8 +29,14 @@ class Controller():
         for uInputWord in uInputDict:
             #print(uInputWord)
             matchingWords = spn.checkMatches(uType, uInputWord)
-            mostFrequentWordList.append(spn.getMostFrequentWords(matchingWords))
-        #print(mostFrequentWordList)
+            data = spn.getMostFrequentWords(matchingWords)
+            mostFrequentWords = data[0]
+            
+            if(uType != "artist" and data[1] == 1):
+                mostFrequentWords = mostFrequentWords + spn.stemInputAndCheckMatch(uType, uInputWord)
+
+            mostFrequentWordList.append(mostFrequentWords)
+        print(mostFrequentWordList)
         
         for array in mostFrequentWordList:
             temp = []
@@ -76,6 +84,7 @@ class Controller():
         songsData = []
 
         for song in results:
+            print(song)
             songsData.append(songsDB["Songs"][song-1])
         
         #print(songData['Title'])
