@@ -48,6 +48,7 @@ class SpellCorrector():
             wordFrequency = []
             for wordList in matchingWords:
                 for word in wordList:
+                    print(word)
                     try:
                         ind = words.index(word)
                         wordFrequency[ind] = wordFrequency[ind] + 1
@@ -57,12 +58,13 @@ class SpellCorrector():
             #print("freq",wordFrequency)
             #print("word",words)
             maxFrequency = max(wordFrequency)
-            for i in range(100):
+            for i in range(20):
                 if(len(wordFrequency)==i):
                     break
                 ind = wordFrequency.index(max(wordFrequency))
                 correctWords.append(words[ind])
                 wordFrequency[ind] = 0
+            #print(correctWords, maxFrequency)
             return correctWords, maxFrequency
         except:
             return [],0
@@ -70,7 +72,6 @@ class SpellCorrector():
     def stemInputAndCheckMatch(self, uType, word):
         ps = PorterStemmer()
         stemmedWord = ps.stem(word)
-        print("stem",stemmedWord)
         matchingWords = self.checkMatches(uType, stemmedWord)
         data = self.getMostFrequentWords(matchingWords)
         if(data[1] != 1):

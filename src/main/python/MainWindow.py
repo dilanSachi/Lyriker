@@ -56,7 +56,6 @@ class MainWindow(ApplicationContext):
         self.ui.btnViewSuggestions.clicked.connect(self.displaySuggestions)
 
     def browseSongs(self):
-        print("browse songs")
         self.clearResults()
         total = len(self.jsondb.getSongsDB()['Songs'])
         if(self.totSongs == []):
@@ -77,17 +76,13 @@ class MainWindow(ApplicationContext):
         self.ui.resultListWidget.itemClicked.connect(self.displayNextSongs)
         
     def displayNextSongs(self, item):
-        print('inside')
         row = self.ui.resultListWidget.row(item)
-        print(row)
         if(row == 15):
-            print('next clckd')
             results = []
             for i in range(self.counter, self.counter+15):
                 results.append(self.totSongs[i])
             self.counter += 15
             self.songsData = self.controller.getSongsData(results, self.jsondb)
-            print(results)
             self.ui.resultListWidget.itemClicked.disconnect(self.displayNextSongs)
             #print(self.songsData)
             self.displayResults()
@@ -97,7 +92,6 @@ class MainWindow(ApplicationContext):
             self.processBrowsingResults(item)
 
     def processBrowsingResults(self, item):
-        print('XXXXXXXXXXXXXXXXXXXXXX')
         row = self.ui.resultListWidget.row(item)
         self.saveToSearchHistory(self.songsData[row]['Title'], self.songsData[row]['Artist'])
         self.clearResults()
@@ -105,7 +99,6 @@ class MainWindow(ApplicationContext):
         self.displayLyrics(self.songsData[row])
 
     def processResults(self, item):
-        print('BBBBBBBBBBBBBBBBBBBBBBBB')
         row = self.ui.resultListWidget.row(item)
         self.saveToSearchHistory(self.songsData[row]['Title'], self.songsData[row]['Artist'])
         self.clearResults()
@@ -120,17 +113,19 @@ class MainWindow(ApplicationContext):
         self.displayResults()
         
     def displayLyrics(self, songData):
-        print('AAAAAAAAAAAAAAAAAAAAAAA')
-        self.ui.resultListWidget.addItem(songData['Title'])
-        self.ui.resultListWidget.addItem(songData['Artist'])
-        self.ui.resultListWidget.addItem('Still working')
+        self.ui.resultListWidget.addItem("Title : " + songData['Title'])
+        self.ui.resultListWidget.addItem("Artist : " + songData['Artist'])
+        self.ui.resultListWidget.addItem("Album : " + songData['Album'])
+        self.ui.resultListWidget.addItem(" ")
+        #font = QFont()
+        #font.setPointSize(45)
+        #self.ui.resultListWidget.item(0).setFont(font)
         songStr = ""
         for part in songData['Lyrics']:
             songStr = songStr + part
         self.ui.resultListWidget.addItem(songStr)
 
     def searchByLyric(self):
-
         #self.ui.resultListWidget.itemClicked.connect(self.processResults)
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('lyric', uInput, self.jsondb)
@@ -139,7 +134,6 @@ class MainWindow(ApplicationContext):
         self.displayResults()
 
     def searchByArtist(self):
-        
         #self.ui.resultListWidget.itemClicked.connect(self.processResults)
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('artist', uInput, self.jsondb)
@@ -148,7 +142,6 @@ class MainWindow(ApplicationContext):
         self.displayResults()
 
     def searchByAlbum(self):
-        
         #self.ui.resultListWidget.itemClicked.connect(self.processResults)
         uInput = str(self.ui.txtUInput.toPlainText())
         results = self.controller.processInput('album', uInput, self.jsondb)
@@ -162,22 +155,16 @@ class MainWindow(ApplicationContext):
             self.ui.resultListWidget.addItem(data['Title'] + " - " + data['Artist'])
 
     def saveToSearchHistory(self, title, artist):
-        #print('Bye')
         sqlt = SQLiteConnector(self)
         stmt = '''select * from searchhistory where songtitle = ? and artist = ?'''
         data = sqlt.readDB(stmt, [title, artist])
-        print('data',data)
         if(data == False or data == []):
-            print("hey")
             stmt2 = '''insert into searchhistory(songtitle, artist, frequency) values (?, ?, ?)'''
             sqlt.executeOne(stmt2, [title, artist, 1])
         else:
-            print("O yay")
-            #print(data)
             frequency = int(data[0][2]) + 1
             stmt2 = '''update searchhistory set frequency = ? where songtitle = ? and artist = ?'''
             sqlt.executeOne(stmt2, [frequency, title, artist])
-        #print('Hi')
 
     def clearResults(self):
         self.ui.resultListWidget.clear()

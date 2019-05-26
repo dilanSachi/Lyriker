@@ -29,7 +29,7 @@ class WordNormalizer():
         temp = re.sub(r'[\(\)\*\.\?\'\"\`\’]', '', name)
         formattednames = re.split(";|,|-|!|\r|\n|\s|{|}|[|]", temp)
         for formattedname in formattednames:
-            self.artistNames.append(formattedname)
+            self.artistNames.append(formattedname.lower())
 
     def formatAlbumName(self, name):
         name = name.strip()
@@ -40,7 +40,7 @@ class WordNormalizer():
                 stemmedWord = self.stemWord(formattedname)
             except:
                 stemmedWord = formattedname"""
-            self.albumNames.append(formattedname)
+            self.albumNames.append(formattedname.lower())
 
     def formatLine(self, words):
         words = words.strip()

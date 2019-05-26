@@ -25,4 +25,3 @@ class LetterDeleter():
                 uniqueWordSet.append(i)
         return uniqueWordSet
 
-#print(LetterDeleter().delete("Johnny",2))

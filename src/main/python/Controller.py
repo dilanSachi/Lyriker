@@ -37,6 +37,7 @@ class Controller():
 
             mostFrequentWordList.append(mostFrequentWords)
         print(mostFrequentWordList)
+        print(len(mostFrequentWordList))
         
         for array in mostFrequentWordList:
             temp = []
@@ -69,7 +70,7 @@ class Controller():
         results = []
         #print(mostRelevantSongs)
         #print(mostRelevantSongFrquency)
-        for i in range(8):
+        for i in range(15):
             if(len(mostRelevantSongFrquency)==i):
                 break
             ind = mostRelevantSongFrquency.index(max(mostRelevantSongFrquency))
@@ -84,7 +85,7 @@ class Controller():
         songsData = []
 
         for song in results:
-            print(song)
+            #print(song)
             songsData.append(songsDB["Songs"][song-1])
         
         #print(songData['Title'])

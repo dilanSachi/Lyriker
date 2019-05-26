@@ -144,38 +144,20 @@ p, li { white-space: pre-wrap; }
      <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menuAbout">
     <property name="title">
-     <string>File</string>
+     <string>About</string>
     </property>
+    <addaction name="actionCreated_By_Dilan_Sachintha_Nayanajith"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuWindow">
-    <property name="title">
-     <string>Window</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuView"/>
-   <addaction name="menuWindow"/>
-   <addaction name="menuHelp"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionCreated_By_Dilan_Sachintha_Nayanajith">
+   <property name="text">
+    <string>Created By : Dilan Sachintha Nayanajith</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

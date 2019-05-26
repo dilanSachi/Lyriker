@@ -42,7 +42,7 @@ class Main(ApplicationContext):           # 1. Subclass ApplicationContext
             
 class Test(ApplicationContext):
 
-    def printer():
+    def printer(self):
         print("Test")
 
 
